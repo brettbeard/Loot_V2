@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "Loot_V2 (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "Loot_V2 (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}

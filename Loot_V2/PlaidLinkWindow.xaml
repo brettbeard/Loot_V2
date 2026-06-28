@@ -1,0 +1,10 @@
+<windowex:WindowEx
+    x:Class="Loot_V2.PlaidLinkWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:windowex="using:WinUIEx"
+    Title="Connect Bank Account"
+    Width="500"
+    Height="700">
+    <WebView2 x:Name="LinkWebView" />
+</windowex:WindowEx>

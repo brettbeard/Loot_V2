@@ -1,0 +1,99 @@
+<Page
+    x:Class="Loot_V2.Views.ImportsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:helpers="using:Loot_V2.Helpers"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <helpers:CurrencyConverter x:Key="CurrencyConverter"/>
+        <helpers:DateOnlyConverter x:Key="DateOnlyConverter"/>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisible"/>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToCollapsed" Invert="True"/>
+        <helpers:MatchedStatusConverter x:Key="MatchedStatusConverter"/>
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <Button Content="Load OFX File..." Click="OnLoadOFXClicked"
+                    IsEnabled="{x:Bind ViewModel.HasMonth, Mode=OneWay}"/>
+            <CheckBox Content="Show Matched"
+                      IsChecked="{x:Bind ViewModel.ShowMatched, Mode=TwoWay}"
+                      VerticalAlignment="Center"/>
+            <CheckBox Content="Show Hidden"
+                      IsChecked="{x:Bind ViewModel.ShowHidden, Mode=TwoWay}"
+                      VerticalAlignment="Center"/>
+            <TextBlock Text="Load a month first (Transactions page) before importing OFX."
+                       VerticalAlignment="Center" Opacity="0.6" FontSize="12"
+                       Visibility="{x:Bind ViewModel.HasMonth, Mode=OneWay, Converter={StaticResource BoolToCollapsed}}"/>
+        </StackPanel>
+
+        <!-- OFX Transactions DataGrid -->
+        <controls:DataGrid
+            Grid.Row="1"
+            x:Name="OFXGrid"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="Horizontal"
+            SelectionMode="Single"
+            ItemsSource="{x:Bind ViewModel.Source, Mode=OneWay}"
+            SelectedItem="{x:Bind ViewModel.SelectedTransaction, Mode=TwoWay}"
+            LoadingRow="OnLoadingRow"
+            RightTapped="OnGridRightTapped"
+            Sorting="OnGridSorting"
+            Visibility="{x:Bind ViewModel.HasOFXData, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+            <controls:DataGrid.Resources>
+                <SolidColorBrush x:Key="DataGridColumnHeaderBackgroundColor" Color="Transparent"/>
+            </controls:DataGrid.Resources>
+            <controls:DataGrid.Columns>
+                <controls:DataGridTemplateColumn Header="Date" Tag="Date" Width="100" CanUserSort="True">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Date, Converter={StaticResource DateOnlyConverter}}"
+                                       VerticalAlignment="Center" Margin="12,0"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Header="Name" Tag="Name" Width="*" CanUserSort="True">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="12,0"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Header="Amount" Tag="Amount" Width="120" CanUserSort="True">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Amount, Converter={StaticResource CurrencyConverter}}"
+                                       VerticalAlignment="Center" Margin="12,0"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+                <controls:DataGridTemplateColumn Header="Status" Tag="IsMatched" Width="110" CanUserSort="True">
+                    <controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding IsMatched, Converter={StaticResource MatchedStatusConverter}}"
+                                       VerticalAlignment="Center" Margin="12,0"/>
+                        </DataTemplate>
+                    </controls:DataGridTemplateColumn.CellTemplate>
+                </controls:DataGridTemplateColumn>
+            </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        <!-- Empty state when OFX not loaded -->
+        <TextBlock Grid.Row="1"
+                   Text="No OFX file loaded. Click 'Load OFX File...' to import transactions from your bank."
+                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                   TextWrapping="Wrap" Opacity="0.5" MaxWidth="400"
+                   Visibility="{x:Bind ViewModel.HasOFXData, Mode=OneWay, Converter={StaticResource BoolToCollapsed}}"/>
+
+    </Grid>
+</Page>

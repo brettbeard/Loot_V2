@@ -1,0 +1,11 @@
+{
+    "LocalSettingsOptions": {
+      "ApplicationDataFolder": "Loot_V2/ApplicationData",
+      "LocalSettingsFile": "LocalSettings.json"
+    },
+  "Plaid": {
+    "Environment": "Sandbox",
+    "ClientId": "<your-plaid-client-id>",
+    "Secret": "<your-plaid-secret>"
+  }
+}
